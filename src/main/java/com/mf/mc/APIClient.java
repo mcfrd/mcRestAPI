@@ -14,13 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class APIClient {
 
-    // *************************************
-    // Initiate the constants with your data
-    // *************************************
-
-    private static String BASE_URL = "http://<SERVER>:8080/rest/";
-    private static String username = "<USER>";
-    private static String password = "<PASSWORD>";
+    private static String BASE_URL = "";
 
     // ************************************
     // Mobile Center APIs end-points
@@ -45,7 +39,7 @@ public class APIClient {
     // ************************************
 
     @SuppressWarnings("unused")
-    private static String APP = "/PATH/TO/APP/FILE.ipa|apk";
+    private static String APP = "";
 
     private OkHttpClient client;
     private String hp4msecret;
@@ -59,6 +53,9 @@ public class APIClient {
     // ******************************************************
 
     private APIClient(String username, String password) throws IOException {
+        if (username == null | password == null) {
+            throw new IllegalArgumentException ("Please submit both a username and a password !");
+        }
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .readTimeout(240, TimeUnit.SECONDS)
                 .writeTimeout(240, TimeUnit.SECONDS)
@@ -232,7 +229,11 @@ public class APIClient {
 
     public static void main(String[] args) throws IOException {
         try{
-            APIClient client = new APIClient(username, password);
+            
+            BASE_URL = args[0] + "/rest/";
+            APP = args[3];
+
+            APIClient client = new APIClient(args[1], args[2]);
             client.deviceContent();
             client.apps();
             client.uploadApp(APP);
@@ -247,5 +248,4 @@ public class APIClient {
         GET,
         POST
     }
-
 }
