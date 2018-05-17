@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class APIClient {
 
-    private static String BASE_URL = "";
+    String BASE_URL = System.getenv("MC_URL");
 
     // ************************************
     // Mobile Center APIs end-points
@@ -54,7 +54,7 @@ public class APIClient {
 
     private APIClient(String username, String password) throws IOException {
         if (username == null | password == null) {
-            throw new IllegalArgumentException ("Please submit both a username and a password !");
+            throw new IllegalArgumentException ("Please provide both a username and a password through environment variables !");
         }
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder()
                 .readTimeout(240, TimeUnit.SECONDS)
@@ -229,11 +229,9 @@ public class APIClient {
 
     public static void main(String[] args) throws IOException {
         try{
-            
-            BASE_URL = args[0] + "/rest/";
-            APP = args[3];
+            APP = args[0];
 
-            APIClient client = new APIClient(args[1], args[2]);
+            APIClient client = new APIClient(System.getenv("MC_USERNAME"), System.getenv("MC_PASSWORD"));
             client.deviceContent();
             client.apps();
             client.uploadApp(APP);
